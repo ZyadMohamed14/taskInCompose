@@ -75,7 +75,7 @@ fun ConnectorScreen(
     Box(
         Modifier
             .fillMaxSize()
-            .background(backgroundColor)
+
     ) {
         Scaffold(
             topBar = {
@@ -138,12 +138,7 @@ fun ConnectorScreen(
                 }
             }
         }
-        if (connectionState) {
-            OverlayScreen(showTooltips = false) {
-                onNavigateToQuestionScreen()
-                viewModel.updateConnectorState(false)
-            }
-        }
+
     }
 }
 

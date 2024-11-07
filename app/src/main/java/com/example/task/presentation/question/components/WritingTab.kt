@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,107 +16,87 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Air
-import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.LocalAirport
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.task.DashBoardViewModel
-import com.example.task.OverlayScreen
 import com.example.task.R
-import com.example.task.TooltipPopup
-import com.example.task.ui.theme.NeutralWhite
-import com.example.task.ui.theme.NeutralWhite2
-import com.example.task.ui.theme.black40
+import com.example.task.presentation.question.QuestionsKeys
 import com.example.task.ui.theme.extraSmallTitleStyle
 import com.example.task.ui.theme.lightGreen
-import com.example.task.ui.theme.lightPrimaryColor
-import com.example.task.ui.theme.navyBlue
-import com.example.task.ui.theme.primaryColor
+import com.pseudoankit.coachmark.LocalCoachMarkScope
+import com.pseudoankit.coachmark.model.HighlightedViewConfig
+import com.pseudoankit.coachmark.model.ToolTipPlacement
+import com.pseudoankit.coachmark.scope.enableCoachMark
+import com.pseudoankit.coachmark.shape.Arrow
+import com.pseudoankit.coachmark.shape.Balloon
 
 @Composable
-fun WritingTab() {
-    val viewModel = hiltViewModel<DashBoardViewModel>()
-    val writingState by viewModel.writingState.collectAsState()
-    val shadowColor = NeutralWhite2 // Adjust the opacity here
-    val foregroundColor = if (writingState) shadowColor else Color.White
+fun WritingTab(
+    modifier: Modifier = Modifier,
+    onItemClick: () -> Unit,
 
-    LazyVerticalGrid(
-        // modifier = Modifier.background(Color.Red),
-        columns = GridCells.Fixed(2), // Number of columns
-        contentPadding = PaddingValues(16.dp) // Optional padding around the grid
-    ) {
-        items(10) {
-            Box (modifier = Modifier.padding(8.dp)){
-                WritingItemWithToolTip(){
+) {
 
+
+        LazyVerticalGrid(
+            modifier = modifier.clickable {
+                           onItemClick()
+            },
+            columns = GridCells.Fixed(2), // Number of columns
+        ) {
+
+            items(10) { index ->
+                Box(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxWidth()
+                ) {
+                    if (index == 0) {
+                        // Show the coach mark on the first item
+                        WritingItem(
+                            modifier = Modifier.enableCoachMark(
+                                key = QuestionsKeys.CourseItem,
+                                toolTipPlacement = ToolTipPlacement.Top,
+                                highlightedViewConfig = HighlightedViewConfig(
+                                    shape = HighlightedViewConfig.Shape.Rect(8.dp),
+                                    padding = PaddingValues(start = 14.dp, bottom = 10.dp,top = 30.dp,end = 14.dp)
+                                ),
+                                coachMarkScope = LocalCoachMarkScope.current,
+                                tooltip = {
+                                    Balloon(arrow = Arrow.Bottom()) {
+                                        Text(text = "Quiz", color = Color.White)
+                                    }
+                                }
+                            )
+                        )
+                    } else {
+                        WritingItem()
+                    }
                 }
             }
-
         }
-    }
-
 
 }
 
-@Composable
-fun WritingItemWithToolTip(
-    onClickItem: () -> Unit
-) {
-    TooltipPopup(
-        modifier = Modifier
-            .padding(start = 8.dp)
-        ,
-        requesterView = { modifier ->
-            Box(modifier = modifier) {
-                WritingItem(modifier)
-            }
-
-        },
-        tooltipContent = {
-
-            Text(
-                modifier = Modifier
-                    .background(navyBlue)
-                    .padding(horizontal = 12.dp)
-                    .padding(vertical = 8.dp),
-                text = "this is a Question Number 1",
-                style = extraSmallTitleStyle.copy(color = Color.White)
-            )
-
-
-        }
-    )
 
 
 
-}
 @Composable
 fun WritingItem(
-    modifier: Modifier= Modifier
-){
+    modifier: Modifier = Modifier
+) {
     Card(
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(
@@ -125,20 +104,26 @@ fun WritingItem(
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp
-        )
+        ),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(160.dp) // Explicit height for consistent size
     ) {
-        Box(modifier = modifier.fillMaxSize()) { // Use Box to layer items
-            // Content inside the card
+        Box(
+            modifier = Modifier
+                .fillMaxWidth() // Keeps the Box within the card's width
+                .padding(8.dp) // Padding for inner content
+        ) {
             Column(
                 modifier = Modifier
-                    .padding(16.dp) // Add padding inside the card
-                    .fillMaxWidth(), // Ensures the column takes full width
-                verticalArrangement = Arrangement.spacedBy(8.dp) // Spacing between items
+                    .fillMaxWidth()
+                    .padding(8.dp), // Padding inside the card
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 // First Row for the questions text
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween // Distribute space evenly
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
                         text = "5 sur 10 Questions",
@@ -158,7 +143,7 @@ fun WritingItem(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.travel), // Example filter icon
+                        painter = painterResource(id = R.drawable.travel),
                         contentDescription = "icon",
                         modifier = Modifier.size(24.dp),
                     )
@@ -168,7 +153,7 @@ fun WritingItem(
                         style = extraSmallTitleStyle.copy(
                             fontSize = 15.sp,
                         ),
-                        modifier = Modifier.weight(1f) // Takes remaining space
+                        modifier = Modifier.weight(1f)
                     )
                 }
                 Spacer(modifier = Modifier.width(4.dp))
@@ -182,11 +167,10 @@ fun WritingItem(
                 // Vertical progress bar
                 CustomLinearProgressIndicator(progress = 0.5f)
             }
-
-
         }
     }
 }
+
 
 
 @Composable
@@ -214,83 +198,5 @@ fun CustomLinearProgressIndicator(
 
 
 /*
-@Composable
-fun WritingItem(
-    isFirstItem: Boolean = false,
-    isOverLayState: Boolean = false
-) {
-    val backgroundColor = if (isFirstItem && isOverLayState) Color.White  else NeutralWhite
 
-    Card(
-        modifier = Modifier.padding(16.dp), // Padding around the card
-        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = backgroundColor
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 4.dp
-        )
-    ) {
-        // Using Column to stack elements vertically
-        Column(
-            modifier = Modifier
-                .padding(16.dp) // Add padding inside the card
-                .fillMaxWidth(), // Ensures the column takes full width
-            verticalArrangement = Arrangement.spacedBy(8.dp) // Spacing between items
-        ) {
-            // First Row for the questions text
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween // Distribute space evenly
-            ) {
-                Text(
-                    text = "5 sur 10 Questions",
-                    style = extraSmallTitleStyle.copy(
-                        color =  Color.Black,
-                        fontWeight = FontWeight.Normal
-
-                    ),
-                    modifier = Modifier
-                        .background(lightGreen)
-                        .padding(4.dp)
-                )
-
-            }
-
-            // Second Row for the icon and text
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.travel), // Example filter icon
-                    contentDescription = "icon",
-                    modifier = Modifier.size(24.dp),
-                    tint =  if(!isFirstItem && isOverLayState) primaryColor else Color.Unspecified
-
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "Voyage",
-                    style = extraSmallTitleStyle.copy(fontSize = 15.sp,
-                        color =  if(!isFirstItem && isOverLayState) primaryColor else Color.Gray),
-                    modifier = Modifier.weight(1f) // Takes remaining space
-                )
-            }
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = "progress 50",
-                style = extraSmallTitleStyle.copy(
-                    color = if(!isFirstItem && isOverLayState) primaryColor else Color.Gray
-                ),
-
-
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            // Vertical progress bar
-            CustomLinearProgressIndicator(progress = 0.5f)
-        }
-    }
-}
-@Composable
  */

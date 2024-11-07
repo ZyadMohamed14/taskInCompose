@@ -58,6 +58,10 @@ kapt{
 dependencies {
 
     implementation("com.google.dagger:hilt-android:2.48")
+    implementation("com.svenjacobs.reveal:reveal-core:3.1.1")
+    implementation("com.github.vivekgupta4Git:Composecoach:2.0.0")
+    implementation("com.github.skydoves:balloon-compose:1.6.11")
+    implementation("io.github.pseudoankit:coachmark:3.0.1")
     kapt("com.google.dagger:hilt-android-compiler:2.48")
 
     implementation("androidx.compose.foundation:foundation")
