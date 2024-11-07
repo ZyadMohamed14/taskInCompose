@@ -8,7 +8,7 @@ This repository contains a mobile application designed to [insert a brief descri
 
 Check out the video demonstration to see the application in action:
 
-[Watch the Project Video](https://drive.google.com/file/d/1TqoT6JAuH-j2Th-JeoerKkKxqO2buw7D/view?usp=drive_link)
+[Watch the Project Video](https://drive.google.com/file/d/1UqnK7vGPfPfKmFxbnKwiK_14S9FEYvR7/view?usp=drive_link)
 
 ## Try the Application
 
