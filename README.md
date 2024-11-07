@@ -14,6 +14,6 @@ Check out the video demonstration to see the application in action:
 
 You can test the mobile application directly in your browser:
 
-[Launch the App](https://appetize.io/app/b_2plhqcxjzigmdutovgdnxhxxw4)
+[Launch the App](https://appetize.io/app/b_ezusrmlq77brsorlky7eqvgo6u?device=pixel7&osVersion=13.0)
 
 
